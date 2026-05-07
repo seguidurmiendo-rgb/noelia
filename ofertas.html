@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Vittoria | Ofertas Especiales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+    <style>
+        :root {
+            --primary-color: #d4af37;
+            --bg-color: #050505;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Fondo */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url('victoria_full_background_1778091476134.png');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            filter: blur(5px) brightness(0.3);
+            transform: scale(1.1);
+        }
+
+        /* Header */
+        .page-header {
+            width: 100%;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-back {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-back:hover {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #fff, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Visor del libro */
+        .book-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        #flip-book {
+            /* StPageFlip lo gestiona */
+        }
+
+        .page {
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .page img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Controles */
+        .book-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            justify-content: center;
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .btn-nav {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--primary-color);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background: rgba(212, 175, 55, 0.3);
+            transform: scale(1.1);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .page-counter {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Loading y Error */
+        .status-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            min-height: 300px;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .status-icon {
+            font-size: 3rem;
+        }
+
+        .status-text {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(212, 175, 55, 0.2);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Instrucción de swipe */
+        .swipe-hint {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.35);
+            text-align: center;
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <a href="index.html" class="btn-back">← Volver</a>
+        <h1 class="page-title">⭐ Ofertas Especiales</h1>
+    </div>
+
+    <div class="book-container" id="book-container">
+        <div class="status-screen" id="status-screen">
+            <div class="loading-spinner"></div>
+            <p class="status-text">Cargando las ofertas...</p>
+        </div>
+    </div>
+
+    <div class="swipe-hint" id="swipe-hint" style="display:none;">
+        ← Deslizá para pasar las páginas →
+    </div>
+
+    <div class="book-controls" id="book-controls" style="display:none;">
+        <button class="btn-nav" id="btn-prev" onclick="prevPage()">‹</button>
+        <span class="page-counter" id="page-counter">1 / 1</span>
+        <button class="btn-nav" id="btn-next" onclick="nextPage()">›</button>
+    </div>
+
+    <script>
+        // ID de la carpeta "Ofertas Especiales" en tu Drive
+        // El script de Google nos devuelve las imágenes
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzExdds6b-GohChV2QznSANOvUf7G5XhKVUCkkZ2zaYc_clykdL4kGvrmdMgQ4Owzo/exec?type=ofertas';
+
+        let pageFlip = null;
+
+        async function loadOfertas() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error('No se pudo conectar');
+                const data = await response.json();
+
+                if (!data.images || data.images.length === 0) {
+                    showError('📭', 'No hay ofertas disponibles por el momento.<br>¡Volvé pronto!');
+                    return;
+                }
+
+                buildFlipBook(data.images);
+
+            } catch (err) {
+                console.error(err);
+                showError('⚠️', 'No se pudieron cargar las ofertas.<br>Verificá tu conexión e intentá de nuevo.');
+            }
+        }
+
+        function buildFlipBook(images) {
+            const container = document.getElementById('book-container');
+            container.innerHTML = '';
+
+            // Tamaño adaptable al dispositivo
+            const maxW = Math.min(window.innerWidth - 40, 480);
+            const bookW = maxW;
+            const bookH = bookW * 1.3;
+
+            // Crear el div del libro
+            const bookEl = document.createElement('div');
+            bookEl.id = 'flip-book';
+            container.appendChild(bookEl);
+
+            // Crear páginas
+            images.forEach(imgUrl => {
+                const page = document.createElement('div');
+                page.className = 'page';
+                page.style.width = bookW + 'px';
+                page.style.height = bookH + 'px';
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.alt = 'Oferta especial';
+                page.appendChild(img);
+                bookEl.appendChild(page);
+            });
+
+            // Inicializar StPageFlip
+            pageFlip = new St.PageFlip(bookEl, {
+                width: bookW,
+                height: bookH,
+                showCover: false,
+                mobileScrollSupport: false,
+                drawShadow: true,
+                flippingTime: 600,
+            });
+
+            pageFlip.loadFromHTML(bookEl.querySelectorAll('.page'));
+
+            pageFlip.on('flip', () => updateCounter());
+
+            // Mostrar controles
+            document.getElementById('book-controls').style.display = 'flex';
+            document.getElementById('swipe-hint').style.display = 'block';
+            updateCounter();
+        }
+
+        function updateCounter() {
+            const total = pageFlip ? pageFlip.getPageCount() : 0;
+            const current = pageFlip ? pageFlip.getCurrentPageIndex() + 1 : 1;
+            document.getElementById('page-counter').textContent = `${current} / ${total}`;
+            document.getElementById('btn-prev').disabled = current <= 1;
+            document.getElementById('btn-next').disabled = current >= total;
+        }
+
+        function prevPage() { if (pageFlip) pageFlip.flipPrev(); }
+        function nextPage() { if (pageFlip) pageFlip.flipNext(); }
+
+        function showError(icon, msg) {
+            document.getElementById('status-screen').innerHTML = `
+                <div class="status-icon">${icon}</div>
+                <p class="status-text">${msg}</p>
+            `;
+        }
+
+        loadOfertas();
+    </script>
+</body>
+</html>

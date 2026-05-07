@@ -164,7 +164,7 @@ header {
 .catalog-grid {
     display: grid;
     grid-template-columns: 1fr; /* Móvil: 1 columna */
-    gap: 20px;
+    gap: 12px;
     perspective: 1000px;
 }
 
@@ -181,7 +181,7 @@ header {
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius);
-    padding: 25px 30px;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;

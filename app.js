@@ -9,11 +9,14 @@ async function loadCatalogs() {
         // Si hay un error en el script, usamos el respaldo
         if (catalogs.error) throw new Error(catalogs.error);
         
+        // Agregamos los botones fijos que siempre deben aparecer
+        agregarBotonesEspeciales(catalogs);
         renderCatalogs(catalogs);
     } catch (error) {
         console.warn('Cargando datos de respaldo (Modo Local):', error);
         // Lista completa de todas las marcas
         const backupData = [
+            { name: "ARBELL", url: "#", status: "Ver Catálogo" },
             { name: "AVON", url: "https://drive.google.com/file/d/1HvDEJJzIaKJaZbaH9uDbfJuRqtFy4GGj/view", status: "Campaña Actual" },
             { name: "GIGOT", url: "https://online.fliphtml5.com/aups/qzsa/#p=1", status: "Campaña 8" },
             { name: "MILLANEL", url: "https://issuu.com/millanelcosmetica/docs/c5-2026", status: "Campaña 5" },
@@ -21,7 +24,8 @@ async function loadCatalogs() {
             { name: "BAGUÉS", url: "https://drive.google.com/file/d/15sezHZUwV0jl2yCU92MqtMVf9EDwj1-r/view", status: "Disponible" },
             { name: "UNLOCK", url: "https://drive.google.com/file/d/1Hy5A0FPwFc6_FBd00HMG_kquHxYv4HG1/view", status: "Nuevo" },
             { name: "MONIQUE ARNOLD", url: "https://drive.google.com/file/d/16rGWOSuMgY1av8ofzJTokvg_-JSBZsPW/view", status: "Vigente" },
-            { name: "NATURA", url: "https://drive.google.com/file/d/1XiASrrFH3czcg7GxKHcG-7cONpJdTpzw/view", status: "Ciclo Actual" }
+            { name: "NATURA", url: "https://drive.google.com/file/d/1XiASrrFH3czcg7GxKHcG-7cONpJdTpzw/view", status: "Ciclo Actual" },
+            { name: "⭐ OFERTAS ESPECIALES", url: "ofertas.html", status: "Ver Ofertas" }
         ];
         renderCatalogs(backupData);
     }
@@ -57,6 +61,18 @@ function renderCatalogs(catalogs) {
         const splash = document.getElementById('splash-overlay');
         if (splash) splash.classList.add('hidden');
     }, 2200);
+}
+
+// Botones que SIEMPRE aparecen, vengan o no de Drive
+function agregarBotonesEspeciales(catalogs) {
+    // Arbell: solo si no viene ya en la lista de Drive
+    if (!catalogs.find(c => c.name.toUpperCase() === 'ARBELL')) {
+        catalogs.unshift({ name: "ARBELL", url: "#", status: "Ver Catálogo" });
+    }
+    // Ofertas Especiales: siempre al final
+    if (!catalogs.find(c => c.name.toUpperCase().includes('OFERTA'))) {
+        catalogs.push({ name: "⭐ OFERTAS ESPECIALES", url: "ofertas.html", status: "Ver Ofertas" });
+    }
 }
 
 // Carga inicial
