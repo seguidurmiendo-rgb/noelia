@@ -1,0 +1,29 @@
+name: Sincronización Diaria de Catálogos
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Se ejecuta todos los días a la medianoche
+  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v2
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Ejecutar Robot de Sincronización
+        run: node sync_catalogs.js
+
+      - name: Guardar cambios
+        run: |
+          git config --global user.name 'Victoria Bot'
+          git config --global user.email 'bot@victoria.com'
+          git add catalogs.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Actualización automática de catálogos"
+          git push
