@@ -5,17 +5,21 @@ on:
     - cron: '0 0 * * *' # Se ejecuta todos los días a la medianoche
   workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub
 
+# Otorgar permisos de escritura para que el workflow pueda hacer git push
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Ejecutar Robot de Sincronización
         run: node sync_catalogs.js
